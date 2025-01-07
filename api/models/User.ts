@@ -1,12 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, {Model} from "mongoose";
 import {UserFields} from "../types";
 import bcrypt from "bcrypt";
+
+interface UserMethods {
+    checkPassword(password: string): Promise<boolean>;
+}
+
+type UserModel = Model<UserFields, {}, UserMethods>
 
 const Schema = mongoose.Schema;
 
 const SALT_WORK_FACTOR = 10;
 
-const UserSchema = new Schema<UserFields>({
+const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     username: {
         type: String,
         required: true,
@@ -27,6 +33,10 @@ UserSchema.pre("save", async function (next) {
     this.password = hash;
     next();
 });
+
+UserSchema.methods.checkPassword = function (password: string) {
+    return bcrypt.compare(password, this.password);
+}
 
 UserSchema.set('toJSON', {
     transform: (doc, ret, options) => {
