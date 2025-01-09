@@ -40,6 +40,7 @@ tracksHistoryRouter.post('/', async (req, res, next) => {
         const trackHistory = new TrackHistory({
             user: user._id,
             track,
+            datetime: new Date().toISOString(),
         });
 
         await trackHistory.save();
