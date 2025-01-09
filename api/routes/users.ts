@@ -5,13 +5,20 @@ import User from "../models/User";
 const usersRouter = express.Router();
 
 usersRouter.post('/', async (req, res, next) => {
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password
+    });
+
     try {
-        const user = new User({
-            username: req.body.username,
-            password: req.body.password
-        });
+        const existUser = await User.findOne({ username: user.username });
+        if (existUser) {
+            res.status(401).send({ message: 'User already exists!' });
+            return;
+        }
 
         user.generateToken();
+
 
         await user.save();
         res.send(user);
