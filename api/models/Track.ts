@@ -13,6 +13,7 @@ const TrackSchema = new Schema({
         required: true,
     },
     duration: String,
+
 });
 
 const Track = mongoose.model("Track", TrackSchema);

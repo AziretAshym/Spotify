@@ -11,17 +11,9 @@ usersRouter.post('/', async (req, res, next) => {
     });
 
     try {
-        const existUser = await User.findOne({ username: user.username });
-        if (existUser) {
-            res.status(401).send({ message: 'User already exists!' });
-            return;
-        }
-
         user.generateToken();
-
-
         await user.save();
-        res.send(user);
+        res.send({user, message: "User registered successfully"});
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
              res.status(400).send(error);

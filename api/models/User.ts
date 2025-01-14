@@ -18,7 +18,14 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: {
+            validator: async function (value: string): Promise<boolean> {
+                const existUser: UserFields | null = await User.findOne({username: value});
+                return !existUser;
+            },
+            message: "Username already exists"
+        },
     },
     password: {
         type: String,
