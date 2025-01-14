@@ -6,11 +6,14 @@ import albumsRouter from "./routes/albums";
 import tracksRouter from "./routes/tracks";
 import usersRouter from "./routes/users";
 import tracksHistoryRouter from "./routes/tracksHistory";
+import cors from "cors";
+
 
 
 const app = express();
 const port = 8000;
 
+app.use(cors())
 app.use(express.json());
 app.use(express.static('public'));
 
