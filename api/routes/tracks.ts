@@ -8,10 +8,14 @@ const tracksRouter = express.Router();
 tracksRouter.get("/", async (req, res, next) => {
     const albumIdQuery = req.query.album_id;
 
+    if (!albumIdQuery) {
+        res.status(400).send("Album id is required");
+        return;
+    }
+
     try {
-        const filter = albumIdQuery ? {album: albumIdQuery} : {};
-        const track = await Track.find(filter);
-        res.send(track);
+        const tracks = await Track.find({ album: albumIdQuery }).sort({ number: 1 });  // Сортируем по номеру трека
+        res.send(tracks);
     } catch (e) {
         next(e);
     }
