@@ -32,7 +32,7 @@ const OneAlbum: React.FC<Props> = ({ album }) => {
         </Typography>
 
         <Box sx={{ marginTop: 2 }}>
-          <NavLink to={`/albums/${album._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <NavLink to={`/albums/${album._id}/tracks`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography color="primary">
               View Tracks
             </Typography>

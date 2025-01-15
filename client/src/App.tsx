@@ -3,6 +3,7 @@ import AppToolbar from './components/Toolbar/Toolbar.tsx';
 import Artists from './features/artists/containers/Artists.tsx';
 import { Route, Routes } from 'react-router-dom';
 import Albums from './features/albums/containers/Albums.tsx';
+import Tracks from './features/tracks/containers/Tracks.tsx';
 
 const App = () => {
   return <>
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/" element={<Artists />} />
           <Route path="/artists" element={<Artists />} />
           <Route path="/artist/:artistId/albums" element={<Albums />} />
+          <Route path="/albums/:albumId/tracks" element={<Tracks />} />
           <Route path="*" element={<h1 style={{textAlign: "center"}}>404_Not found</h1>}/>
         </Routes>
       </Container>

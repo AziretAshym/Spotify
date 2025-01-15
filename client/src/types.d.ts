@@ -13,3 +13,11 @@ export interface IAlbum {
   image?: string;
   trackCount: number;
 }
+
+export interface ITrack {
+  _id: string;
+  title: string;
+  album: string;
+  duration: string;
+  number: number;
+}

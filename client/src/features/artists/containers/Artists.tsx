@@ -25,29 +25,34 @@ const Artists = () => {
   }
 
   return (
-    <Box sx={{ padding: "20px" }}>
-      {artists.length === 0 ? (
-        <Typography
-          variant="h6"
-          align="center"
-          sx={{ color: "text.secondary", marginTop: "20px" }}
-        >
-          No Artists Found
-        </Typography>
-      ) : (
-        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
-          {artists.map((artist: IArtist) => (
-            <OneArtist
-              key={artist._id}
-              _id={artist._id}
-              name={artist.name}
-              image={artist.image}
-              info={artist.info}
-            />
-          ))}
-        </Grid>
-      )}
-    </Box>
+    <>
+      <Typography variant="h4">
+        Artists
+      </Typography>
+      <Box sx={{ padding: "20px" }}>
+        {artists.length === 0 ? (
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ color: "text.secondary", marginTop: "20px" }}
+          >
+            No Artists Found
+          </Typography>
+        ) : (
+          <Grid container spacing={3} sx={{ justifyContent: "center" }}>
+            {artists.map((artist: IArtist) => (
+              <OneArtist
+                key={artist._id}
+                _id={artist._id}
+                name={artist.name}
+                image={artist.image}
+                info={artist.info}
+              />
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </>
   );
 };
 
