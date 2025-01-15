@@ -9,4 +9,17 @@ export const fetchArtists = createAsyncThunk<IArtist[], void>(
     const response = await axiosApi<IArtist[]>("/artists");
     return response.data || [];
   }
-)
+);
+
+export const fetchOneArtist = createAsyncThunk<IArtist, string>(
+  'artists/fetchOneArtist',
+  async (artistId) => {
+    try {
+      const response = await axiosApi<IArtist>(`/artists/${artistId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching artist:', error);
+      throw error;
+    }
+  }
+);

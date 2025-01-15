@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
-import { Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography, } from '@mui/material';
+import { Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { apiUrl } from '../../../globalConstants.ts';
 import NoPictureImage from '../../../assets/NoPictureImage.jpeg';
 
@@ -14,6 +15,11 @@ interface Props {
 
 const OneArtist: React.FC<Props> = ({ _id, name, image, info }) => {
   const artistImage = image ? `${apiUrl}/${image}` : NoPictureImage;
+  const navigate = useNavigate();
+
+  const navigateToAlbums = () => {
+    navigate(`/artist/${_id}/albums`);
+  };
 
   return (
     <Grid
@@ -76,6 +82,7 @@ const OneArtist: React.FC<Props> = ({ _id, name, image, info }) => {
               backgroundColor: "primary.main",
               color: "#fff",
             }}
+            onClick={navigateToAlbums}
           >
             <ArrowForward />
           </IconButton>

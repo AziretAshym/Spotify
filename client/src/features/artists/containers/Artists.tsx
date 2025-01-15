@@ -1,27 +1,32 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
-import { selectArtist, selectFetchLoading } from '../artistsSlice.ts';
+import { selectArtists, selectFetchLoading } from '../artistsSlice.ts';
 import { useEffect } from 'react';
 import { fetchArtists } from '../artistsThunks.ts';
 import Grid from "@mui/material/Grid2";
 import { CircularProgress, Typography, Box } from '@mui/material';
 import OneArtist from '../components/OneArtist.tsx';
+import { IArtist } from '../../../types';
 
 const Artists = () => {
   const dispatch = useAppDispatch();
-  const artists = useAppSelector(selectArtist);
+  const artists: IArtist[] = useAppSelector(selectArtists);
   const isFetchArtistsLoading = useAppSelector(selectFetchLoading);
 
   useEffect(() => {
     dispatch(fetchArtists());
   }, [dispatch]);
 
+  if (isFetchArtistsLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ padding: "20px" }}>
-      {isFetchArtistsLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
-          <CircularProgress />
-        </Box>
-      ) : artists.length === 0 ? (
+      {artists.length === 0 ? (
         <Typography
           variant="h6"
           align="center"
@@ -31,7 +36,7 @@ const Artists = () => {
         </Typography>
       ) : (
         <Grid container spacing={3} sx={{ justifyContent: "center" }}>
-          {artists.map((artist) => (
+          {artists.map((artist: IArtist) => (
             <OneArtist
               key={artist._id}
               _id={artist._id}

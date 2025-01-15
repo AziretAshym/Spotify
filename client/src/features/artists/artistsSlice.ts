@@ -1,23 +1,23 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IArtist } from '../../types';
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchArtists } from './artistsThunks.ts';
-import { RootState } from '../../app/store.ts';
+import { fetchArtists, fetchOneArtist } from './artistsThunks.ts';
 
-interface IArtistsState {
+interface ArtistsState {
   artists: IArtist[];
   fetchLoading: boolean;
 }
 
-const initialState: IArtistsState = {
+const initialState: ArtistsState = {
   artists: [],
   fetchLoading: false,
 };
 
-export const selectArtist =(state: RootState) => state.artists.artists;
-export const selectFetchLoading = (state: RootState) => state.artists.fetchLoading;
+export const selectArtists = (state: { artists: ArtistsState }) => state.artists.artists;
+export const selectFetchLoading = (state: { artists: ArtistsState }) => state.artists.fetchLoading;
 
-export const artistsSlice = createSlice({
-  name: "artists",
+
+const artistsSlice = createSlice({
+  name: 'artists',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -25,15 +25,23 @@ export const artistsSlice = createSlice({
       .addCase(fetchArtists.pending, (state) => {
         state.fetchLoading = true;
       })
-      .addCase(fetchArtists.fulfilled, (state, { payload: artist}) => {
+      .addCase(fetchArtists.fulfilled, (state, action: PayloadAction<IArtist[]>) => {
+        state.artists = action.payload;
         state.fetchLoading = false;
-        state.artists = artist;
       })
       .addCase(fetchArtists.rejected, (state) => {
-        state.fetchLoading = false
+        state.fetchLoading = false;
       })
-
-  }
+      .addCase(fetchOneArtist.pending, (state) => {
+        state.fetchLoading = true;
+      })
+      .addCase(fetchOneArtist.fulfilled, (state) => {
+        state.fetchLoading = false;
+      })
+      .addCase(fetchOneArtist.rejected, (state) => {
+        state.fetchLoading = false;
+      });
+  },
 });
 
 export const artistReducers = artistsSlice.reducer;
