@@ -3,16 +3,25 @@ import mongoose from "mongoose";
 import Artist from "../models/Artist";
 import Album from "../models/Album";
 import {imagesUpload} from "../multer";
+import Track from "../models/Track";
 
 const albumsRouter = express.Router();
 
-albumsRouter.get("/", imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.get("/", async (req, res, next) => {
     const artistIdQuery = req.query.artist_id;
 
     try {
-        const filter = artistIdQuery ? {artist: artistIdQuery} : {};
-        const album = await Album.find(filter);
-        res.send(album);
+        const filter = artistIdQuery ? { artist: artistIdQuery } : {};
+        const albums = await Album.find(filter).sort({ yearOfIssue: -1 });
+
+        const albumsWithTrackCount = await Promise.all(
+            albums.map(async (album) => {
+                const trackCount = await Track.countDocuments({ album: album._id });
+                return { ...album.toObject(), trackCount };
+            })
+        );
+
+        res.send(albumsWithTrackCount);
     } catch (e) {
         next(e);
     }

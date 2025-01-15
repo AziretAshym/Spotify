@@ -3,9 +3,8 @@ import { selectArtist, selectFetchLoading } from '../artistsSlice.ts';
 import { useEffect } from 'react';
 import { fetchArtists } from '../artistsThunks.ts';
 import Grid from "@mui/material/Grid2";
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress, Typography, Box } from '@mui/material';
 import OneArtist from '../components/OneArtist.tsx';
-
 
 const Artists = () => {
   const dispatch = useAppDispatch();
@@ -15,32 +14,35 @@ const Artists = () => {
   useEffect(() => {
     dispatch(fetchArtists());
   }, [dispatch]);
+
   return (
-    <>
-      <Grid container direction={"column"}>
-        {isFetchArtistsLoading ? (
+    <Box sx={{ padding: "20px" }}>
+      {isFetchArtistsLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
           <CircularProgress />
-        ) : (
-          <>
-            {artists.length === 0 && !isFetchArtistsLoading ? (
-              <Typography variant="h6">No Artists</Typography>
-            ) : (
-              <>
-                {artists.map((artist) => (
-                  <OneArtist
-                    key={artist._id}
-                    _id={artist._id}
-                    name={artist.name}
-                    image={artist.image}
-                    info={artist.info}
-                  />
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </Grid>
-    </>
+        </Box>
+      ) : artists.length === 0 ? (
+        <Typography
+          variant="h6"
+          align="center"
+          sx={{ color: "text.secondary", marginTop: "20px" }}
+        >
+          No Artists Found
+        </Typography>
+      ) : (
+        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
+          {artists.map((artist) => (
+            <OneArtist
+              key={artist._id}
+              _id={artist._id}
+              name={artist.name}
+              image={artist.image}
+              info={artist.info}
+            />
+          ))}
+        </Grid>
+      )}
+    </Box>
   );
 };
 
