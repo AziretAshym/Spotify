@@ -27,7 +27,7 @@ TrackSchema.pre("save", async function (next) {
 
     try {
         const lastTrack = await mongoose.model("Track").findOne({ album: track.album }).sort({ number: -1 });
-        track.number = lastTrack ? lastTrack.number + 1 : 1;
+        track.number = lastTrack ? lastTrack.number + 1 : lastTrack.number;
         next();
     } catch (e) {
         console.error(e);

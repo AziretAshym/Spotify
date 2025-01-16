@@ -14,7 +14,7 @@ tracksRouter.get("/", async (req, res, next) => {
     }
 
     try {
-        const tracks = await Track.find({ album: albumIdQuery }).sort({ number: 1 });  // Сортируем по номеру трека
+        const tracks = await Track.find({ album: albumIdQuery }).sort({ number: 1 });
         res.send(tracks);
     } catch (e) {
         next(e);
