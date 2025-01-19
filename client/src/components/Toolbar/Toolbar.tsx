@@ -1,8 +1,13 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks.ts';
+import { selectUser } from '../../features/users/usersSlice.ts';
+import AnonymousMenu from './AnonymousMenu.tsx';
+import UserMenu from './UserMenu.tsx';
 
 
 const AppToolbar = () => {
+  const user = useAppSelector(selectUser)
   return (
     <Box sx={{ flexGrow: 1, marginBottom: "60px" }}>
       <AppBar position="static">
@@ -10,9 +15,13 @@ const AppToolbar = () => {
           <Typography variant="h3" component={NavLink} to="/" sx={{textDecoration: 'none', color: 'inherit'}}>
             Spotify
           </Typography>
-          <Button component={NavLink} to="/register" color="inherit">
-            Sing up
-          </Button>
+          {user ?
+            <>
+              <UserMenu user={user} />
+            </>
+           :
+            <AnonymousMenu />
+          }
         </Toolbar>
       </AppBar>
     </Box>
