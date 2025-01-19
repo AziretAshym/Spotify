@@ -10,7 +10,6 @@ import cors from "cors";
 import config from "./config";
 
 
-
 const app = express();
 const port = 8000;
 
