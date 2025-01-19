@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import User from "../models/User";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const usersRouter = express.Router();
 
@@ -29,7 +30,7 @@ usersRouter.post('/session', async (req, res, next) => {
         const user = await User.findOne({username: req.body.username});
 
         if (!user) {
-            res.status(404).send({error: 'User not found'});
+            res.status(400).send({error: 'User not found'});
             return;
         }
 
@@ -52,5 +53,21 @@ usersRouter.post('/session', async (req, res, next) => {
         next(error);
     }
 });
+
+usersRouter.delete('/session', auth, async (req, res, next) => {
+    let reqWithAuth = req as RequestWithUser;
+    const userFromAuth = reqWithAuth.user;
+
+    try {
+        const user = await User.findOne({_id: userFromAuth._id});
+        if (user) {
+            user.generateToken();
+            await user.save();
+            res.send({ message: "User logout successfully" });
+        }
+    } catch (e) {
+        next(e);
+    }
+})
 
 export default usersRouter;
