@@ -3,6 +3,7 @@ import { Button, Menu, MenuItem } from '@mui/material';
 import { User } from '../../types';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../features/users/usersSlice.ts';
+import { logout } from '../../features/users/usersThunks.ts';
 
 interface Props {
   user: User;
@@ -21,6 +22,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
   }
 
   const handleLogOut = () => {
+    dispatch(logout());
     dispatch(unsetUser());
   }
 
