@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { User } from '../../types';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../features/users/usersSlice.ts';
 import { logout } from '../../features/users/usersThunks.ts';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface Props {
   user: User;
@@ -12,6 +13,7 @@ interface Props {
 const UserMenu: React.FC<Props> = ({user}) => {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -24,26 +26,35 @@ const UserMenu: React.FC<Props> = ({user}) => {
   const handleLogOut = () => {
     dispatch(logout());
     dispatch(unsetUser());
+    navigate('/login');
   }
 
   return (
     <>
-      <Button
-        onClick={handleClick}
-        color="inherit"
-      >
-        Hello {user.username}!
-      </Button>
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
-        <MenuItem onClick={handleLogOut}>Log out</MenuItem>
-      </Menu>
+      <Typography variant="h3" component={NavLink} to="/" sx={{textDecoration: 'none', color: 'inherit'}}>
+        Spotify
+      </Typography>
+      <Box display={"flex"} alignItems={"center"} gap={"10px"}>
+        <Typography>
+          Listened tracks history
+        </Typography>
+        <Button
+          onClick={handleClick}
+          color="inherit"
+        >
+          Hello {user.username}!
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem>Profile</MenuItem>
+          <MenuItem>My account</MenuItem>
+          <MenuItem onClick={handleLogOut}>Log out</MenuItem>
+        </Menu>
+      </Box>
     </>
   );
 };
