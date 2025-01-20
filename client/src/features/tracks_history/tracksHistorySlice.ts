@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { addTrackToHistory } from './tracksHistoryThunks';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { addTrackToHistory, getTracksHistory } from './tracksHistoryThunks';
 import { GlobalError, ITrackHistory } from '../../types';
 
 interface TracksHistoryState {
@@ -31,6 +31,18 @@ export const tracksHistorySlice = createSlice({
         state.loading = false;
         state.error = action.payload || null;
       })
+
+      .addCase(getTracksHistory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTracksHistory.fulfilled, (state, action: PayloadAction<ITrackHistory[]>) => {
+        state.loading = false;
+        state.history = action.payload;
+      })
+      .addCase(getTracksHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || null;
+      });
   },
 });
 

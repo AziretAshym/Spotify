@@ -32,3 +32,30 @@ export const addTrackToHistory = createAsyncThunk<
     }
   }
 );
+
+
+export const getTracksHistory = createAsyncThunk<
+  ITrackHistory[],
+  void,
+  { rejectValue: GlobalError }
+>(
+  'tracksHistory/getAll',
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
+    const token = state.users.user?.token;
+
+    try {
+      const response = await axiosApi.get<ITrackHistory[]>('/track_history', {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return response.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+      throw e;
+    }
+  }
+);

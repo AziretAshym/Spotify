@@ -35,9 +35,13 @@ const UserMenu: React.FC<Props> = ({user}) => {
         Spotify
       </Typography>
       <Box display={"flex"} alignItems={"center"} gap={"10px"}>
-        <Typography>
+        <Button
+          component={NavLink}
+          to="/track_history"
+          sx={{textDecoration: 'none', color: 'inherit'}
+        }>
           Listened tracks history
-        </Typography>
+        </Button>
         <Button
           onClick={handleClick}
           color="inherit"
