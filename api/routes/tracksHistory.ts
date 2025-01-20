@@ -6,6 +6,43 @@ import Track from "../models/Track";
 
 const tracksHistoryRouter = express.Router();
 
+tracksHistoryRouter.get('/', async (req, res, next) => {
+    const token = req.get('Authorization');
+    if (!token) {
+        res.status(401).send({ error: 'No token provided' });
+        return;
+    }
+
+    try {
+        const user = await User.findOne({ token });
+        if (!user) {
+            res.status(401).send({ error: 'Invalid token' });
+            return;
+        }
+
+        const trackHistory = await TrackHistory.find({ user: user._id })
+            .populate({
+                path: 'track',
+                populate: {
+                    path: 'album',
+                    populate: {
+                        path: 'artist',
+                        select: 'name image',
+                    },
+                    select: 'title artist yearOfIssue',
+                },
+            })
+            .sort({ datetime: -1 });
+
+        res.status(200).json(trackHistory);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+
+
 tracksHistoryRouter.post('/', async (req, res, next) => {
     const token = req.get('Authorization');
     if (!token) {
