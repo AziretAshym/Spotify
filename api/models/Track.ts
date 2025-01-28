@@ -15,6 +15,11 @@ const TrackSchema = new Schema({
     duration: String,
     number: {
         type: Number,
+    },
+    isPublished: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 });
 
@@ -27,7 +32,7 @@ TrackSchema.pre("save", async function (next) {
 
     try {
         const lastTrack = await mongoose.model("Track").findOne({ album: track.album }).sort({ number: -1 });
-        track.number = lastTrack ? lastTrack.number + 1 : lastTrack.number;
+        track.number = lastTrack ? lastTrack.number + 1 : 1;
         next();
     } catch (e) {
         console.error(e);

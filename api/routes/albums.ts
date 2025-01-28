@@ -4,6 +4,8 @@ import Artist from "../models/Artist";
 import Album from "../models/Album";
 import {imagesUpload} from "../multer";
 import Track from "../models/Track";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const albumsRouter = express.Router();
 
@@ -27,8 +29,8 @@ albumsRouter.get("/", async (req, res, next) => {
     }
 });
 
-albumsRouter.post("/", imagesUpload.single('image'), async (req, res, next) => {
-    const { title, artist, yearOfIssue } = req.body;
+albumsRouter.post("/", imagesUpload.single('image'), auth, permit('user'), async (req, res, next) => {
+    const { title, artist, yearOfIssue, isPublished } = req.body;
 
     if (!artist) {
         res.status(400).send('Artist id must be in request!');
@@ -53,6 +55,7 @@ albumsRouter.post("/", imagesUpload.single('image'), async (req, res, next) => {
             title,
             artist,
             yearOfIssue,
+            isPublished,
             image: req.file ? `images/${req.file.filename}` : null,
         });
 

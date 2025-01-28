@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import Album from "../models/Album";
 import Track from "../models/Track";
+import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
 
@@ -21,8 +23,8 @@ tracksRouter.get("/", async (req, res, next) => {
     }
 });
 
-tracksRouter.post('/', async (req, res, next) => {
-    const { title, album, duration } = req.body;
+tracksRouter.post('/', auth, permit('user'), async (req, res, next) => {
+    const { title, album, duration, isPublished } = req.body;
 
     if (!album) {
         res.status(400).send('Album id must be in request!');
@@ -42,6 +44,7 @@ tracksRouter.post('/', async (req, res, next) => {
             title,
             album,
             duration,
+            isPublished
         });
 
         await newTrack.save();

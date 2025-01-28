@@ -15,6 +15,11 @@ const ArtistSchema = new Schema({
         type: String,
         default: null,
     },
+    isPublished: {
+        type: Boolean,
+        default: false,
+        required: true,
+    }
 });
 
 const Artist = mongoose.model("Artist", ArtistSchema);

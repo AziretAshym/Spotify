@@ -28,6 +28,12 @@ const UserSchema = new Schema<HydratedDocument<UserFields>, UserModel, UserMetho
             message: "Username already exists"
         },
     },
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
+        required: true,
+    },
     password: {
         type: String,
         required: true,
@@ -54,7 +60,7 @@ UserSchema.methods.generateToken = function () {
 }
 
 UserSchema.set('toJSON', {
-    transform: (doc, ret, options) => {
+    transform: (_doc, ret, _options) => {
         delete ret.password;
         return ret;
     }
