@@ -10,6 +10,7 @@ const permit = (...roles: string[]) => {
         }
         if (!roles.includes(req.user.role)) {
             res.status(403).send({message: 'Unauthorized!'});
+            return;
         }
         next();
     }

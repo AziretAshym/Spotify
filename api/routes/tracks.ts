@@ -23,7 +23,7 @@ tracksRouter.get("/", async (req, res, next) => {
     }
 });
 
-tracksRouter.post('/', auth, permit('user'), async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
     const { title, album, duration, isPublished } = req.body;
 
     if (!album) {
@@ -60,5 +60,28 @@ tracksRouter.post('/', auth, permit('user'), async (req, res, next) => {
         next(e);
     }
 });
+
+tracksRouter.delete("/:id", auth, permit('admin'), async (req, res, next) => {
+    try {
+        const trackId = req.params.id;
+
+        if (!mongoose.isValidObjectId(trackId)) {
+            res.status(400).send({ error: 'Invalid track ID' });
+            return;
+        }
+
+        const track = await Track.findById(trackId);
+
+        if (!track) {
+            res.status(404).send({ error: 'Track not found' });
+            return;
+        }
+
+        await track.deleteOne();
+        res.send({ message: 'Track deleted successfully' });
+    } catch (e) {
+        next(e);
+    }
+})
 
 export default tracksRouter;

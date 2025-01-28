@@ -32,7 +32,7 @@ artistsRouter.get('/:id', async (req, res, next) => {
     }
 });
 
-artistsRouter.post('/', imagesUpload.single('image'), auth, permit('user'), async (req, res, next) => {
+artistsRouter.post('/', imagesUpload.single('image'), auth, async (req, res, next) => {
     try {
         const { name, info, isPublished } = req.body;
 
@@ -57,6 +57,30 @@ artistsRouter.post('/', imagesUpload.single('image'), auth, permit('user'), asyn
         next(e);
     }
 });
+
+artistsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const artistId = req.params.id;
+
+        if (!mongoose.isValidObjectId(artistId)) {
+            res.status(400).send({ error: 'Invalid artist ID' });
+            return;
+        }
+
+        const artist = await Artist.findById(artistId);
+
+        if (!artist) {
+            res.status(404).send({ error: 'Artist not found' });
+            return;
+        }
+
+        await artist.deleteOne();
+        res.send({ message: 'Artist deleted successfully' });
+    } catch (e) {
+        next(e);
+    }
+});
+
 
 
 
