@@ -82,6 +82,31 @@ tracksRouter.delete("/:id", auth, permit('admin'), async (req, res, next) => {
     } catch (e) {
         next(e);
     }
-})
+});
+
+tracksRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, res, next) => {
+    const trackId = req.params.id;
+    try {
+
+        if (!mongoose.isValidObjectId(trackId)) {
+            res.status(400).send({ error: 'Invalid trac ID' });
+            return;
+        }
+
+        const track = await Track.findById(trackId);
+
+        if (!track) {
+            res.status(404).send({ error: 'Track not found' });
+            return;
+        }
+
+        track.isPublished = !track.isPublished;
+        await track.save();
+
+        res.send({ message: 'Track publication status updated'});
+    } catch (e) {
+        next(e);
+    }
+});
 
 export default tracksRouter;

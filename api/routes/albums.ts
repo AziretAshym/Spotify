@@ -94,6 +94,31 @@ albumsRouter.delete("/:id", auth, permit('admin'), async (req, res, next) => {
     } catch (e) {
         next(e);
     }
+});
+
+albumsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, res, next) => {
+    const albumId = req.params.id;
+    try {
+
+        if (!mongoose.isValidObjectId(albumId)) {
+            res.status(400).send({ error: 'Invalid album ID' });
+            return;
+        }
+
+        const album = await Album.findById(albumId);
+
+        if (!album) {
+            res.status(404).send({ error: 'Album not found' });
+            return;
+        }
+
+        album.isPublished = !album.isPublished;
+        await album.save();
+
+        res.send({ message: 'Album publication status updated'});
+    } catch (e) {
+        next(e);
+    }
 })
 
 export default albumsRouter;

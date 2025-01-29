@@ -81,7 +81,30 @@ artistsRouter.delete('/:id', auth, permit('admin'), async (req, res, next) => {
     }
 });
 
+artistsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
 
+    const artistId = req.params.id;
+    try {
 
+        if (!mongoose.isValidObjectId(artistId)) {
+            res.status(400).send({ error: 'Invalid artist ID' });
+            return;
+        }
+
+        const artist = await Artist.findById(artistId);
+
+        if (!artist) {
+            res.status(404).send({ error: 'Artist not found' });
+            return;
+        }
+
+        artist.isPublished = !artist.isPublished;
+        await artist.save();
+
+        res.send({ message: 'Artist publication status updated'});
+    } catch (e) {
+        next(e);
+    }
+});
 
 export default artistsRouter;

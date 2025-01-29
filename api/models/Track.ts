@@ -15,6 +15,7 @@ const TrackSchema = new Schema({
     duration: String,
     number: {
         type: Number,
+        required: [true, 'Duration is required'],
     },
     isPublished: {
         type: Boolean,
@@ -26,8 +27,9 @@ const TrackSchema = new Schema({
 TrackSchema.pre("save", async function (next) {
     const track = this;
 
-    if (!track.isNew) {
-        return next();
+    if (track.number) {
+        next();
+        return;
     }
 
     try {
@@ -35,7 +37,7 @@ TrackSchema.pre("save", async function (next) {
         track.number = lastTrack ? lastTrack.number + 1 : 1;
         next();
     } catch (e) {
-        console.error(e);
+        next(e as Error);
     }
 });
 
