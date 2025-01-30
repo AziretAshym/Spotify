@@ -39,33 +39,39 @@ const TracksHistory = () => {
                 No listening history
               </Typography>
             ) : (
-              tracksHistory.map((trackHistory: ITrackHistory) => (
-                <Box
-                  key={trackHistory._id}
-                  sx={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Typography variant="h5">
-                      <strong>{trackHistory.track.title}</strong>
-                      <br />
-                      <Typography variant="body2" color="text.secondary">
-                        Artist: <strong>{trackHistory.track.album.artist.name}</strong> / Album: <strong>{trackHistory.track.album.title}</strong>
+              tracksHistory.map((trackHistory: ITrackHistory) => {
+                const track = trackHistory.track;
+                const artist = track?.album?.artist;
+                const album = track?.album;
+
+                return (
+                  <Box
+                    key={trackHistory._id}
+                    sx={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <Typography variant="h5">
+                        <strong>{track?.title}</strong>
+                        <br />
+                        <Typography variant="body2" color="text.secondary">
+                          Artist: <strong>{artist?.name || 'Unknown Artist'}</strong> / Album: <strong>{album?.title || 'Unknown Album'}</strong>
+                        </Typography>
                       </Typography>
+                    </div>
+                    <Typography color="text.secondary">
+                      Listened: {new Date(trackHistory.datetime).toLocaleString()}
                     </Typography>
-                  </div>
-                  <Typography color="text.secondary">
-                    Listened: {new Date(trackHistory.datetime).toLocaleString()}
-                  </Typography>
-                </Box>
-              ))
+                  </Box>
+                );
+              })
             )}
           </Grid>
         </>

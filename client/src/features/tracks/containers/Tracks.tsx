@@ -39,6 +39,8 @@ const Tracks = () => {
     }
   }, [dispatch, album]);
 
+  const filteredTracks = user?.role === 'admin' ? tracks : tracks.filter(track => track.isPublished);
+
   const handleListenTrack = async (trackId: string) => {
     const track = tracks.find((track) => track._id === trackId);
     try {
@@ -83,12 +85,12 @@ const Tracks = () => {
           </Typography>
 
           <Grid container spacing={2}>
-            {tracks.length === 0 ? (
+            {filteredTracks.length === 0 ? (
               <Typography variant="h6" sx={{ textAlign: 'center', width: '100%' }}>
                 No tracks
               </Typography>
             ) : (
-              tracks.map((track) => (
+              filteredTracks.map((track) => (
                 <Box
                   key={track._id}
                   sx={{

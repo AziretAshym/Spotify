@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 const Albums = () => {
   const { artistId } = useParams();
   const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.users.user);
 
   const [artistName, setArtistName] = useState<string>('');
   const albums = useAppSelector(state => state.albums.albums);
@@ -31,6 +32,8 @@ const Albums = () => {
     }
   }, [dispatch, artistId]);
 
+  const filteredAlbums = user?.role === 'admin' ? albums : albums.filter(album => album.isPublished);
+
   const handleDeleteAlbum = (albumId: string) => {
     toast.success(`Album with ID ${albumId} deleted successfully.`);
   };
@@ -44,10 +47,10 @@ const Albums = () => {
         <CircularProgress />
       ) : (
         <Grid container spacing={2}>
-          {albums.length === 0 ? (
+          {filteredAlbums.length === 0 ? (
             <Typography variant="h6">No albums</Typography>
           ) : (
-            albums.map((album) => (
+            filteredAlbums.map((album) => (
               <OneAlbum key={album._id} album={album} onDelete={handleDeleteAlbum} />
             ))
           )}

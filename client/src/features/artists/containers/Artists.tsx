@@ -12,6 +12,7 @@ const Artists = () => {
   const dispatch = useAppDispatch();
   const artists: IArtist[] = useAppSelector(selectArtists);
   const isFetchArtistsLoading = useAppSelector(selectArtistCreateLoading);
+  const user = useAppSelector(state => state.users.user);
 
   const handleDeleteArtist = () => {
     toast.success('Artist deleted successfully.');
@@ -20,6 +21,8 @@ const Artists = () => {
   useEffect(() => {
     dispatch(fetchArtists());
   }, [dispatch]);
+
+  const filteredArtists = user?.role === 'admin' ? artists : artists.filter(artist => artist.isPublished);
 
   if (isFetchArtistsLoading) {
     return (
@@ -35,7 +38,7 @@ const Artists = () => {
         Artists
       </Typography>
       <Box sx={{ padding: "20px" }}>
-        {artists.length === 0 ? (
+        {filteredArtists.length === 0 ? (
           <Typography
             variant="h6"
             align="center"
@@ -45,7 +48,7 @@ const Artists = () => {
           </Typography>
         ) : (
           <Grid container spacing={3} sx={{ justifyContent: "center" }}>
-            {artists.map((artist: IArtist) => (
+            {filteredArtists.map((artist: IArtist) => (
               <OneArtist
                 key={artist._id}
                 _id={artist._id}
