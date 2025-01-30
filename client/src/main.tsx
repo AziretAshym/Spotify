@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor} />
-    <ToastContainer />
+    <ToastContainer position={"top-center"} />
     <BrowserRouter>
       <App />
     </BrowserRouter>

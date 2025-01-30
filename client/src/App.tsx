@@ -7,6 +7,10 @@ import Tracks from './features/tracks/containers/Tracks.tsx';
 import RegisterPage from './features/users/RegisterPage.tsx';
 import LoginPage from './features/users/LoginPage.tsx';
 import TracksHistory from './features/tracks_history/containers/TracksHistory.tsx';
+import ArtistForm from './features/artists/components/ArtistForm.tsx';
+import AlbumForm from './features/albums/components/AlbumForm.tsx';
+import TrackForm from './features/tracks/Components/TrackForm.tsx';
+import ActionButtons from './components/ActionButtons/ActionButtons.tsx';
 
 const App = () => {
   return <>
@@ -16,13 +20,17 @@ const App = () => {
     </header>
     <main>
       <Container>
+        <ActionButtons />
         <Routes>
           <Route path="/" element={<Artists />} />
           <Route path="/artists" element={<Artists />} />
+          <Route path="/add-new-artist" element={<ArtistForm />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/artist/:artistId/albums" element={<Albums />} />
-          <Route path="/albums/:albumId/tracks" element={<Tracks />} />
+          <Route path="/add-new-album" element={<AlbumForm />} />
+          <Route path="/albums/:albumId/tracks" element={<Tracks  />} />
+          <Route path="/add-new-track" element={<TrackForm />} />
           <Route path="/track_history" element={<TracksHistory />} />
           <Route path="*" element={<h1 style={{textAlign: "center"}}>404_Not found</h1>}/>
         </Routes>

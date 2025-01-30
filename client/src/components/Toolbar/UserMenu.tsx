@@ -36,13 +36,6 @@ const UserMenu: React.FC<Props> = ({user}) => {
       </Typography>
       <Box display={"flex"} alignItems={"center"} gap={"10px"}>
         <Button
-          component={NavLink}
-          to="/track_history"
-          sx={{textDecoration: 'none', color: 'inherit'}
-        }>
-          Listened tracks history
-        </Button>
-        <Button
           onClick={handleClick}
           color="inherit"
         >
@@ -54,8 +47,15 @@ const UserMenu: React.FC<Props> = ({user}) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem>Profile</MenuItem>
-          <MenuItem>My account</MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate('/track_history');
+              setAnchorEl(null);
+            }}
+            sx={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            Listened tracks history
+          </MenuItem>
           <MenuItem onClick={handleLogOut}>Log out</MenuItem>
         </Menu>
       </Box>

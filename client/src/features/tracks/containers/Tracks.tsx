@@ -18,7 +18,7 @@ const Tracks = () => {
     state.albums.albums.find((album) => album._id === albumId)
   );
   const artist = useAppSelector((state) =>
-    state.artists.artists.find((artist) => artist._id === album?.artist)
+    state.artists.artists.find((artist) => artist._id === album?.artist._id)
   );
   const isLoading = useAppSelector((state) => state.tracks.fetchLoading);
 
@@ -26,13 +26,15 @@ const Tracks = () => {
     if (albumId) {
       dispatch(fetchTracks(albumId));
 
-      const artistId = album?.artist || '';
+      const artistId = album?.artist._id || '';
       if (artistId) {
         dispatch(fetchAlbums(artistId));
         dispatch(fetchOneArtist(artistId));
       }
     }
   }, [dispatch, albumId, album?.artist]);
+
+
 
   const handleListenTrack = async (trackId: string) => {
     const track = tracks.find((track) => track._id === trackId);

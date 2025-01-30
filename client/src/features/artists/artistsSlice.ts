@@ -1,20 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IArtist } from '../../types';
-import { fetchArtists, fetchOneArtist } from './artistsThunks.ts';
+import { fetchArtists, fetchOneArtist, createArtist } from './artistsThunks.ts';
 
 interface ArtistsState {
   artists: IArtist[];
   fetchLoading: boolean;
+  createLoading: boolean;
 }
 
 const initialState: ArtistsState = {
   artists: [],
   fetchLoading: false,
+  createLoading: false,
 };
 
 export const selectArtists = (state: { artists: ArtistsState }) => state.artists.artists;
-export const selectFetchLoading = (state: { artists: ArtistsState }) => state.artists.fetchLoading;
-
+export const selectArtistCreateLoading = (state: { artists: ArtistsState }) => state.artists.createLoading;
 
 const artistsSlice = createSlice({
   name: 'artists',
@@ -32,6 +33,7 @@ const artistsSlice = createSlice({
       .addCase(fetchArtists.rejected, (state) => {
         state.fetchLoading = false;
       })
+
       .addCase(fetchOneArtist.pending, (state) => {
         state.fetchLoading = true;
       })
@@ -40,8 +42,19 @@ const artistsSlice = createSlice({
       })
       .addCase(fetchOneArtist.rejected, (state) => {
         state.fetchLoading = false;
+      })
+
+      .addCase(createArtist.pending, (state) => {
+        state.createLoading = true;
+      })
+      .addCase(createArtist.fulfilled, (state) => {
+        state.createLoading = false;
+      })
+      .addCase(createArtist.rejected, (state) => {
+        state.createLoading = false;
       });
   },
 });
 
 export const artistReducers = artistsSlice.reducer;
+

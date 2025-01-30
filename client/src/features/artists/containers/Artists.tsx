@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
-import { selectArtists, selectFetchLoading } from '../artistsSlice.ts';
+import { selectArtists, selectArtistCreateLoading } from '../artistsSlice.ts';
 import { useEffect } from 'react';
 import { fetchArtists } from '../artistsThunks.ts';
 import Grid from "@mui/material/Grid2";
@@ -10,7 +10,7 @@ import { IArtist } from '../../../types';
 const Artists = () => {
   const dispatch = useAppDispatch();
   const artists: IArtist[] = useAppSelector(selectArtists);
-  const isFetchArtistsLoading = useAppSelector(selectFetchLoading);
+  const isFetchArtistsLoading = useAppSelector(selectArtistCreateLoading);
 
   useEffect(() => {
     dispatch(fetchArtists());

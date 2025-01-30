@@ -5,6 +5,13 @@ export interface IArtist {
   info?: string;
 }
 
+export interface ArtistMutation {
+  name: string;
+  image?: File;
+  info?: string;
+  isPublished: boolean;
+}
+
 export interface IAlbum {
   _id: string;
   title: string;
@@ -14,12 +21,28 @@ export interface IAlbum {
   trackCount: number;
 }
 
+export interface AlbumMutation {
+  title: string;
+  artist: string;
+  yearOfIssue: number;
+  image?: File;
+  trackCount?: number;
+  isPublished: boolean;
+}
+
 export interface ITrack {
   _id: string;
   title: string;
   album: IAlbum;
   duration: string;
   number: number;
+}
+
+export interface TracksMutation {
+  title: string;
+  album: string;
+  duration: string;
+  isPublished: boolean;
 }
 
 export interface ITrackHistory {

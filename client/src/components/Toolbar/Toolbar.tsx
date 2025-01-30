@@ -8,7 +8,7 @@ import UserMenu from './UserMenu.tsx';
 const AppToolbar = () => {
   const user = useAppSelector(selectUser)
   return (
-    <Box sx={{ flexGrow: 1, marginBottom: "60px" }}>
+    <Box sx={{ flexGrow: 1, marginBottom: "15px" }}>
       <AppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           {user ?
