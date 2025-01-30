@@ -28,16 +28,19 @@ tracksRouter.post('/', auth, async (req, res, next) => {
 
     if (!album) {
         res.status(400).send('Album id must be in request!');
+        return;
     }
 
     if (!mongoose.isValidObjectId(album)) {
         res.status(400).send('Invalid album id!');
+        return;
     }
 
     try {
         const existAlbum = await Album.findById(album);
         if (!existAlbum) {
             res.status(404).send('Album not found!');
+            return;
         }
 
         const newTrack = new Track({
@@ -56,6 +59,7 @@ tracksRouter.post('/', auth, async (req, res, next) => {
                 message: e.errors[key].message,
             }));
             res.status(400).send({ error: ValidationError });
+            return;
         }
         next(e);
     }
