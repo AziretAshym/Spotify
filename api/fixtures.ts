@@ -34,7 +34,7 @@ const run = async () => {
         },
     )
 
-    const [twoPac, notoriousBig] = await Artist.create(
+    const [twoPac, notoriousBig, snoopDogg] = await Artist.create(
         {
             name: "2Pac",
             image: "fixtures/2pac.jpg",
@@ -46,10 +46,16 @@ const run = async () => {
             image: "fixtures/notorious.jpg",
             info: "Hip-Hop",
             isPublished: true
+        },
+        {
+            name: "Snoop Dogg",
+            image: "fixtures/snoopDogg.jpg",
+            info: "Rap",
+            isPublished: false
         }
     );
 
-    const [All_Eyez_on_Me, Loyal_to_the_Game, Ready_to_Die, Greatest_Hits] = await Album.create(
+    const [All_Eyez_on_Me, Loyal_to_the_Game, Ready_to_Die, Greatest_Hits, thaDoggfather] = await Album.create(
         {
             title: "All Eyez on Me",
             artist: twoPac._id,
@@ -78,7 +84,15 @@ const run = async () => {
             image: "fixtures/greatest_hits.jpg",
             isPublished: true
         },
+        {
+            title: "Tha Doggfather",
+            artist: snoopDogg._id,
+            yearOfIssue: 1996,
+            image: "fixtures/thaDoggfather.jpg",
+            isPublished: false
+        },
     );
+
 
 
 
@@ -225,6 +239,27 @@ const run = async () => {
             duration: "99:99",
             number: 5,
             isPublished: true
+        },
+        {
+            title: "Ride 4 Me",
+            album: thaDoggfather._id,
+            duration: "99:99",
+            number: 1,
+            isPublished: false
+        },
+        {
+            title: "Gold Rush",
+            album: thaDoggfather._id,
+            duration: "99:99",
+            number: 2,
+            isPublished: false
+        },
+        {
+            title: "You Thought",
+            album: thaDoggfather._id,
+            duration: "99:99",
+            number: 3,
+            isPublished: false
         },
     );
     await mongoose.disconnect();
