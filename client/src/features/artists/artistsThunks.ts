@@ -57,3 +57,26 @@ export const createArtist = createAsyncThunk<void, ArtistMutation, { state: Root
     }
   }
 );
+
+export const deleteArtist = createAsyncThunk<void, string, { state: RootState }>(
+  "artists/deleteArtist",
+  async (artistId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.delete(`/artists/${artistId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+);

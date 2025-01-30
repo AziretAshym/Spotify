@@ -14,7 +14,7 @@ albumsRouter.get("/", async (req, res, next) => {
 
     try {
         const filter = artistIdQuery ? { artist: artistIdQuery } : {};
-        const albums = await Album.find(filter).sort({ yearOfIssue: -1 });
+        const albums = await Album.find(filter).populate('artist').sort({ yearOfIssue: -1 });
 
         const albumsWithTrackCount = await Promise.all(
             albums.map(async (album) => {

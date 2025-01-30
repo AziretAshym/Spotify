@@ -4,8 +4,9 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { fetchAlbums } from '../albumsThunks.ts';
 import { fetchOneArtist } from '../../artists/artistsThunks.ts';
 import { CircularProgress, Typography } from '@mui/material';
-import Grid from "@mui/material/Grid2";
+import Grid from '@mui/material/Grid2';
 import OneAlbum from '../components/OneAlbum.tsx';
+import { toast } from 'react-toastify';
 
 const Albums = () => {
   const { artistId } = useParams();
@@ -30,6 +31,10 @@ const Albums = () => {
     }
   }, [dispatch, artistId]);
 
+  const handleDeleteAlbum = (albumId: string) => {
+    toast.success(`Album with ID ${albumId} deleted successfully.`);
+  };
+
   return (
     <div>
       <Typography variant="h4">
@@ -43,7 +48,7 @@ const Albums = () => {
             <Typography variant="h6">No albums</Typography>
           ) : (
             albums.map((album) => (
-              <OneAlbum key={album._id} album={album} />
+              <OneAlbum key={album._id} album={album} onDelete={handleDeleteAlbum} />
             ))
           )}
         </Grid>

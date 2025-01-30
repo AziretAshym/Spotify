@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
-import { fetchTracks } from '../tracksThunks.ts';
+import { fetchTracks, deleteTrack } from '../tracksThunks.ts';
 import { fetchAlbums } from '../../albums/albumsThunks.ts';
 import { fetchOneArtist } from '../../artists/artistsThunks.ts';
-import { CircularProgress, Typography, Box, Button } from '@mui/material';
+import { CircularProgress, Typography, Box, Button, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { addTrackToHistory } from '../../tracks_history/tracksHistoryThunks.ts';
 import { toast } from 'react-toastify';
 
@@ -21,20 +22,20 @@ const Tracks = () => {
     state.artists.artists.find((artist) => artist._id === album?.artist._id)
   );
   const isLoading = useAppSelector((state) => state.tracks.fetchLoading);
+  const user = useAppSelector((state) => state.users.user);
 
   useEffect(() => {
     if (albumId) {
       dispatch(fetchTracks(albumId));
-
-      const artistId = album?.artist._id || '';
-      if (artistId) {
-        dispatch(fetchAlbums(artistId));
-        dispatch(fetchOneArtist(artistId));
-      }
     }
-  }, [dispatch, albumId, album?.artist]);
+  }, [dispatch, albumId]);
 
-
+  useEffect(() => {
+    if (album && album.artist) {
+      dispatch(fetchAlbums(album.artist._id));
+      dispatch(fetchOneArtist(album.artist._id));
+    }
+  }, [dispatch, album]);
 
   const handleListenTrack = async (trackId: string) => {
     const track = tracks.find((track) => track._id === trackId);
@@ -46,17 +47,21 @@ const Tracks = () => {
     }
   };
 
+  const handleDeleteTrack = async (trackId: string) => {
+    try {
+      await dispatch(deleteTrack(trackId)).unwrap();
+      dispatch(fetchTracks(albumId!));
+      toast.success("Track deleted successfully");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to delete track");
+    }
+  };
+
   return (
     <Box sx={{ padding: '20px' }}>
       {isLoading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '200px',
-          }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
           <CircularProgress />
         </Box>
       ) : (
@@ -67,10 +72,7 @@ const Tracks = () => {
 
           <Grid container spacing={2}>
             {tracks.length === 0 ? (
-              <Typography
-                variant="h6"
-                sx={{ textAlign: 'center', width: '100%' }}
-              >
+              <Typography variant="h6" sx={{ textAlign: 'center', width: '100%' }}>
                 No tracks
               </Typography>
             ) : (
@@ -87,13 +89,7 @@ const Tracks = () => {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                    }}
-                  >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Typography>{track.number}.</Typography>
                     <Button onClick={() => handleListenTrack(track._id)}>
                       <PlayCircleOutlineIcon />
@@ -102,9 +98,14 @@ const Tracks = () => {
                       <strong>{track.title}</strong>
                     </Typography>
                   </div>
-                  <Typography color="text.secondary">
-                    Duration: {track.duration}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Typography color="text.secondary">Duration: {track.duration}</Typography>
+                    {user?.role === 'admin' && (
+                      <IconButton color="error" onClick={() => handleDeleteTrack(track._id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Box>
                 </Box>
               ))
             )}

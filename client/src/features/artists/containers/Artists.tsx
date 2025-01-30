@@ -6,11 +6,16 @@ import Grid from "@mui/material/Grid2";
 import { CircularProgress, Typography, Box } from '@mui/material';
 import OneArtist from '../components/OneArtist.tsx';
 import { IArtist } from '../../../types';
+import { toast } from 'react-toastify';
 
 const Artists = () => {
   const dispatch = useAppDispatch();
   const artists: IArtist[] = useAppSelector(selectArtists);
   const isFetchArtistsLoading = useAppSelector(selectArtistCreateLoading);
+
+  const handleDeleteArtist = () => {
+    toast.success('Artist deleted successfully.');
+  };
 
   useEffect(() => {
     dispatch(fetchArtists());
@@ -47,6 +52,8 @@ const Artists = () => {
                 name={artist.name}
                 image={artist.image}
                 info={artist.info}
+                onDelete={handleDeleteArtist}
+                deleteLoading={false}
               />
             ))}
           </Grid>

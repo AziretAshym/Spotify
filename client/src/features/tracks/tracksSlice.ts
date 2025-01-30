@@ -1,17 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createTrack, fetchTracks } from './tracksThunks';
+import { createTrack, fetchTracks, deleteTrack } from './tracksThunks'; // Импортируем deleteTrack
 import { ITrack } from '../../types';
 
 interface TracksState {
   tracks: ITrack[];
   fetchLoading: boolean;
   createLoading: boolean;
+  deleteLoading: boolean;
 }
 
 const initialState: TracksState = {
   tracks: [],
   fetchLoading: false,
   createLoading: false,
+  deleteLoading: false,
 };
 
 const tracksSlice = createSlice({
@@ -39,6 +41,16 @@ const tracksSlice = createSlice({
       })
       .addCase(createTrack.rejected, (state) => {
         state.createLoading = false;
+      })
+
+      .addCase(deleteTrack.pending, (state) => {
+        state.deleteLoading = true;
+      })
+      .addCase(deleteTrack.fulfilled, (state) => {
+        state.deleteLoading = false;
+      })
+      .addCase(deleteTrack.rejected, (state) => {
+        state.deleteLoading = false;
       });
   },
 });

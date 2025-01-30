@@ -5,9 +5,17 @@ import { RootState } from '../../app/store.ts';
 
 export const fetchAlbums = createAsyncThunk(
   'albums/fetchAlbums',
-  async (artistId: string) => {
-    const response = await axiosApi.get(`/albums?artist_id=${artistId}`);
-    return response.data || [];
+  async (artistId: string | undefined) => {
+    if (!artistId) {
+      console.error('Artist must have a ID');
+    }
+
+    try {
+      const response = await axiosApi.get(`/albums?artist_id=${artistId}`);
+      return response.data || [];
+    } catch (e) {
+      console.error(e)
+    }
   }
 );
 
@@ -39,6 +47,29 @@ export const createAlbum = createAsyncThunk<void, AlbumMutation, { state: RootSt
       });
     } catch (e) {
       console.error('Error creating artist:', e);
+    }
+  }
+);
+
+export const deleteAlbum = createAsyncThunk<void, string, { state: RootState }>(
+  "albums/deleteAlbum",
+  async (albumId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.delete(`/albums/${albumId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
   }
 );

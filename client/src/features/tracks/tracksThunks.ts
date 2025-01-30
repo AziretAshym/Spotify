@@ -42,3 +42,26 @@ export const createTrack = createAsyncThunk<void, TracksMutation, { state: RootS
     }
   }
 );
+
+export const deleteTrack = createAsyncThunk<void, string, { state: RootState }>(
+  "tracks/deleteTrack",
+  async (trackId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.delete(`/tracks/${trackId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+);
