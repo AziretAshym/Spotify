@@ -52,9 +52,33 @@ const UserMenu: React.FC<Props> = ({user}) => {
               navigate('/track_history');
               setAnchorEl(null);
             }}
-            sx={{ textDecoration: 'none', color: 'inherit' }}
           >
             Listened tracks history
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              navigate('/add-new-artist');
+              setAnchorEl(null);
+            }}
+          >
+            Add new artist
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate('/add-new-album');
+              setAnchorEl(null);
+            }}
+          >
+            Add new album
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              navigate('/add-new-track');
+              setAnchorEl(null);
+            }}
+          >
+            Add new track
           </MenuItem>
           <MenuItem onClick={handleLogOut}>Log out</MenuItem>
         </Menu>

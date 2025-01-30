@@ -52,6 +52,7 @@ const Artists = () => {
                 name={artist.name}
                 image={artist.image}
                 info={artist.info}
+                isPublished={artist.isPublished}
                 onDelete={handleDeleteArtist}
                 deleteLoading={false}
               />

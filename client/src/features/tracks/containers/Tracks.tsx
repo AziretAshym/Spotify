@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
-import { fetchTracks, deleteTrack } from '../tracksThunks.ts';
+import { fetchTracks, deleteTrack, publishTrack } from '../tracksThunks.ts';
 import { fetchAlbums } from '../../albums/albumsThunks.ts';
 import { fetchOneArtist } from '../../artists/artistsThunks.ts';
 import { CircularProgress, Typography, Box, Button, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 import { addTrackToHistory } from '../../tracks_history/tracksHistoryThunks.ts';
 import { toast } from 'react-toastify';
 
@@ -23,6 +24,7 @@ const Tracks = () => {
   );
   const isLoading = useAppSelector((state) => state.tracks.fetchLoading);
   const user = useAppSelector((state) => state.users.user);
+  const publishLoading = useAppSelector((state) => state.tracks.publishLoading);
 
   useEffect(() => {
     if (albumId) {
@@ -58,6 +60,16 @@ const Tracks = () => {
     }
   };
 
+  const handlePublishTrack = async (trackId: string) => {
+    try {
+      await dispatch(publishTrack(trackId)).unwrap();
+      dispatch(fetchTracks(albumId!));
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to update track publish status");
+    }
+  };
+
   return (
     <Box sx={{ padding: '20px' }}>
       {isLoading ? (
@@ -89,7 +101,7 @@ const Tracks = () => {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Typography>{track.number}.</Typography>
                     <Button onClick={() => handleListenTrack(track._id)}>
                       <PlayCircleOutlineIcon />
@@ -97,14 +109,28 @@ const Tracks = () => {
                     <Typography variant="h5">
                       <strong>{track.title}</strong>
                     </Typography>
-                  </div>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: 300 }}>
                     <Typography color="text.secondary">Duration: {track.duration}</Typography>
-                    {user?.role === 'admin' && (
-                      <IconButton color="error" onClick={() => handleDeleteTrack(track._id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    )}
+                    <Typography color={!track.isPublished ? "error" : "success"}>{track.isPublished ? 'Published' : "Unpublished"}</Typography>
+
+                    <Box>
+                      {user?.role === 'admin' && (
+                        <>
+                          <IconButton
+                            color="primary"
+                            onClick={() => handlePublishTrack(track._id)}
+                            disabled={publishLoading}
+                          >
+                            {track.isPublished ? <RemoveCircleOutline /> : <AddCircleOutline />}
+                          </IconButton>
+
+                          <IconButton color="error" onClick={() => handleDeleteTrack(track._id)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               ))

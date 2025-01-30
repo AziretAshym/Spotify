@@ -3,6 +3,7 @@ export interface IArtist {
   name: string;
   image?: string;
   info?: string;
+  isPublished: boolean;
 }
 
 export interface ArtistMutation {
@@ -19,6 +20,7 @@ export interface IAlbum {
   yearOfIssue: number;
   image?: string;
   trackCount: number;
+  isPublished: boolean;
 }
 
 export interface AlbumMutation {
@@ -36,6 +38,7 @@ export interface ITrack {
   album: IAlbum;
   duration: string;
   number: number;
+  isPublished: boolean;
 }
 
 export interface TracksMutation {

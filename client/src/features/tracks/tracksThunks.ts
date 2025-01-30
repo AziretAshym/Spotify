@@ -65,3 +65,24 @@ export const deleteTrack = createAsyncThunk<void, string, { state: RootState }>(
     }
   }
 );
+
+export const publishTrack = createAsyncThunk<void, string, { state: RootState }>(
+  "tracks/publishTrack",
+  async (trackId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.patch(`/tracks/${trackId}/togglePublished`, null, {
+        headers: { Authorization: token },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+);

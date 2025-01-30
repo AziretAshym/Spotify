@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IArtist } from '../../types';
-import { fetchArtists, fetchOneArtist, createArtist, deleteArtist } from './artistsThunks.ts';
+import { fetchArtists, fetchOneArtist, createArtist, deleteArtist, publishArtist } from './artistsThunks.ts';
 
 interface ArtistsState {
   artists: IArtist[];
   fetchLoading: boolean;
   createLoading: boolean;
   deleteLoading: boolean;
+  publishLoading: boolean;
   error: string | null;
 }
 
@@ -15,11 +16,13 @@ const initialState: ArtistsState = {
   fetchLoading: false,
   createLoading: false,
   deleteLoading: false,
+  publishLoading: false,
   error: null,
 };
 
 export const selectArtists = (state: { artists: ArtistsState }) => state.artists.artists;
 export const selectArtistCreateLoading = (state: { artists: ArtistsState }) => state.artists.createLoading;
+export const selectPublishLoading = (state: { artists: ArtistsState }) => state.artists.publishLoading;
 
 const artistsSlice = createSlice({
   name: 'artists',
@@ -74,6 +77,18 @@ const artistsSlice = createSlice({
       .addCase(deleteArtist.rejected, (state, action) => {
         state.deleteLoading = false;
         state.error = action.error.message || 'Failed to delete artist';
+      })
+
+      .addCase(publishArtist.pending, (state) => {
+        state.publishLoading = true;
+        state.error = null;
+      })
+      .addCase(publishArtist.fulfilled, (state) => {
+        state.publishLoading = false;
+      })
+      .addCase(publishArtist.rejected, (state, action) => {
+        state.publishLoading = false;
+        state.error = action.error.message || 'Failed to update publish status';
       });
   },
 });

@@ -1,12 +1,12 @@
 import { IAlbum } from '../../../types';
 import React from 'react';
-import { Box, Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, IconButton, Typography, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { apiUrl } from '../../../globalConstants.ts';
 import NoPictureImage from '../../../assets/NoPictureImage.jpeg';
 import { Delete } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
-import { deleteAlbum, fetchAlbums } from '../albumsThunks.ts';
+import { deleteAlbum, fetchAlbums, publishAlbum } from '../albumsThunks.ts';
 import { toast } from 'react-toastify';
 
 interface Props {
@@ -18,6 +18,7 @@ const OneAlbum: React.FC<Props> = ({ album, onDelete }) => {
   const albumImage = album.image ? `${apiUrl}/${album.image}` : NoPictureImage;
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.users.user);
+  const publishLoading = useAppSelector((state) => state.albums.publishLoading);
 
   const handleDelete = async () => {
     if (!onDelete) {
@@ -32,6 +33,16 @@ const OneAlbum: React.FC<Props> = ({ album, onDelete }) => {
     } catch (e) {
       console.error(e);
       toast.error('Failed to delete the album.');
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      await dispatch(publishAlbum(album._id));
+      dispatch(fetchAlbums(album.artist?._id));
+    } catch (e) {
+      console.error(e);
+      toast.error('Failed to update album publication status.');
     }
   };
 
@@ -53,6 +64,10 @@ const OneAlbum: React.FC<Props> = ({ album, onDelete }) => {
         <Typography color="text.secondary">
           Count of tracks: <strong>{album.trackCount}</strong>
         </Typography>
+        <Typography color={!album.isPublished ? "error" : "success"}>
+          <strong>{!album.isPublished ? 'Unpublish' : 'Publish'}</strong>
+        </Typography>
+
 
         <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <NavLink to={`/albums/${album._id}/tracks`} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -60,19 +75,30 @@ const OneAlbum: React.FC<Props> = ({ album, onDelete }) => {
               View Tracks
             </Typography>
           </NavLink>
+
           {user?.role === 'admin' && (
-            <IconButton
-              sx={{
-                backgroundColor: "error.main",
-                color: "#fff",
-                '&:hover': {
-                  backgroundColor: "error.dark",
-                }
-              }}
-              onClick={handleDelete}
-            >
-              <Delete />
-            </IconButton>
+            <>
+              <Button
+                variant="contained"
+                color={album.isPublished ? "error" : "success"}
+                onClick={handlePublish}
+                disabled={publishLoading}
+              >
+                {album.isPublished ? 'Unpublish' : 'Publish'}
+              </Button>
+              <IconButton
+                sx={{
+                  backgroundColor: "error.main",
+                  color: "#fff",
+                  '&:hover': {
+                    backgroundColor: "error.dark",
+                  }
+                }}
+                onClick={handleDelete}
+              >
+                <Delete />
+              </IconButton>
+            </>
           )}
         </Box>
       </CardContent>

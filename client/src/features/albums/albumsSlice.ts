@@ -1,12 +1,14 @@
 import { IAlbum } from '../../types';
 import { createSlice } from '@reduxjs/toolkit';
 import { createAlbum, deleteAlbum, fetchAlbums } from './albumsThunks.ts';
+import { publishArtist } from '../artists/artistsThunks.ts';
 
 interface AlbumState {
   albums: IAlbum[];
   fetchLoading: boolean;
   createLoading: boolean;
   deleteLoading: boolean;
+  publishLoading: boolean;
   error: string | null;
 }
 
@@ -15,6 +17,7 @@ const initialState: AlbumState = {
   fetchLoading: false,
   createLoading: false,
   deleteLoading: false,
+  publishLoading: false,
   error: null,
 }
 
@@ -59,6 +62,18 @@ export const albumsSlice = createSlice({
       .addCase(deleteAlbum.rejected, (state, action) => {
         state.deleteLoading = false;
         state.error = action.error.message || 'Failed to delete album';
+      })
+
+      .addCase(publishArtist.pending, (state) => {
+        state.publishLoading = true;
+        state.error = null;
+      })
+      .addCase(publishArtist.fulfilled, (state) => {
+        state.publishLoading = false;
+      })
+      .addCase(publishArtist.rejected, (state, action) => {
+        state.publishLoading = false;
+        state.error = action.error.message || 'Failed to update publish status';
       });
   }
 });

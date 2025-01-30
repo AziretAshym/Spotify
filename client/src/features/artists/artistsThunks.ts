@@ -4,11 +4,13 @@ import axiosApi from '../../axiosApi.ts';
 import { RootState } from '../../app/store.ts';
 
 
-export const fetchArtists = createAsyncThunk<IArtist[], void>(
+export const fetchArtists = createAsyncThunk<IArtist[], void, { state: RootState }>(
   "artists/fetchArtists",
-  async () => {
-    const response = await axiosApi<IArtist[]>("/artists");
-    return response.data || [];
+  async (_, { getState }) => {
+    const user = getState().users.user;
+    const query = user?.role === "admin" ? "" : "?isPublished=true";
+    const response = await axiosApi.get(`/artists${query}`);
+    return response.data;
   }
 );
 
@@ -73,6 +75,27 @@ export const deleteArtist = createAsyncThunk<void, string, { state: RootState }>
         headers: {
           Authorization: token,
         },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+);
+
+export const publishArtist = createAsyncThunk<void, string, { state: RootState }>(
+  "artists/publishArtist",
+  async (artistId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.patch(`/artists/${artistId}/togglePublished`, null, {
+        headers: { Authorization: token },
       });
     } catch (e) {
       console.error(e);

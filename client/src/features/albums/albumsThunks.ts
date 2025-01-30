@@ -73,3 +73,24 @@ export const deleteAlbum = createAsyncThunk<void, string, { state: RootState }>(
     }
   }
 );
+
+export const publishAlbum = createAsyncThunk<void, string, { state: RootState }>(
+  "albums/publishAlbum",
+  async (albumId, { getState }) => {
+    const token = getState().users.user?.token;
+
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      await axiosApi.patch(`/albums/${albumId}/togglePublished`, null, {
+        headers: { Authorization: token },
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+);

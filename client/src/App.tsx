@@ -10,7 +10,6 @@ import TracksHistory from './features/tracks_history/containers/TracksHistory.ts
 import ArtistForm from './features/artists/components/ArtistForm.tsx';
 import AlbumForm from './features/albums/components/AlbumForm.tsx';
 import TrackForm from './features/tracks/Components/TrackForm.tsx';
-import ActionButtons from './components/ActionButtons/ActionButtons.tsx';
 
 const App = () => {
   return <>
@@ -20,7 +19,6 @@ const App = () => {
     </header>
     <main>
       <Container>
-        <ActionButtons />
         <Routes>
           <Route path="/" element={<Artists />} />
           <Route path="/artists" element={<Artists />} />
