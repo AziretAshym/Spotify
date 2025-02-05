@@ -7,6 +7,7 @@ import { selectLoginError } from './usersSlice.ts';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { login } from './usersThunks.ts';
 import { LockOpenOutlined } from '@mui/icons-material';
+import { GoogleLogin } from '@react-oauth/google';
 
 
 const LoginPage = () => {
@@ -58,6 +59,13 @@ const LoginPage = () => {
              {loginError.error}
            </Alert>
           )}
+          <Box sx={{pt: 2}}>
+            <GoogleLogin
+              onSuccess={(credentialResponse => {
+                console.log(credentialResponse);
+              })}
+              onError={() => <Alert severity="error">Login failed</Alert>}/>
+          </Box>
           <Box component="form" noValidate onSubmit={submit} sx={{ mt: 3 }}>
             <Grid container direction={"column"} size={12} spacing={2}>
               <Grid>
