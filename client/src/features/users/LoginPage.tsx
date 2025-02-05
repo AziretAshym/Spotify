@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectLoginError } from './usersSlice.ts';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { login } from './usersThunks.ts';
+import { googleLogin, login } from './usersThunks.ts';
 import { LockOpenOutlined } from '@mui/icons-material';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -37,6 +37,11 @@ const LoginPage = () => {
     }
   };
 
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+  };
+
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -62,7 +67,9 @@ const LoginPage = () => {
           <Box sx={{pt: 2}}>
             <GoogleLogin
               onSuccess={(credentialResponse => {
-                console.log(credentialResponse);
+                if (credentialResponse.credential) {
+                  void googleLoginHandler(credentialResponse.credential);
+                }
               })}
               onError={() => <Alert severity="error">Login failed</Alert>}/>
           </Box>

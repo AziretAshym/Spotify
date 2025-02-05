@@ -11,7 +11,7 @@ const client = new OAuth2Client(config.google.clientId);
 usersRouter.post("/google", async (req, res, next) => {
     try {
         const ticket = await client.verifyIdToken({
-            idToken: req.body.credentials,
+            idToken: req.body.credential,
             audience: config.google.clientId,
         });
 

@@ -70,7 +70,9 @@ export interface LoginMutation {
 export interface User {
   _id: string;
   username: string;
+  displayName?: string;
   role: string;
+  avatar: File;
   token: string;
 }
 

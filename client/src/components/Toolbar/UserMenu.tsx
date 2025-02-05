@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { User } from '../../types';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../features/users/usersSlice.ts';
@@ -35,11 +35,12 @@ const UserMenu: React.FC<Props> = ({user}) => {
         Spotify
       </Typography>
       <Box display={"flex"} alignItems={"center"} gap={"10px"}>
+        <Avatar></Avatar>
         <Button
           onClick={handleClick}
           color="inherit"
         >
-          Hello {user.username}!
+          {user.displayName}
         </Button>
         <Menu
           anchorEl={anchorEl}
