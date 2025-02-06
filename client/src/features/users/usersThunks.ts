@@ -3,7 +3,6 @@ import { GlobalError, LoginMutation, RegisterMutation, RegisterResponse, User, V
 import axiosApi from '../../axiosApi.ts';
 import { isAxiosError } from 'axios';
 import { RootState } from '../../app/store.ts';
-import { data } from 'react-router-dom';
 
 export const googleLogin = createAsyncThunk<User, string, {rejectValue: GlobalError}>(
   'users/googleLogin',
@@ -24,13 +23,22 @@ export const googleLogin = createAsyncThunk<User, string, {rejectValue: GlobalEr
 export const register = createAsyncThunk<
   RegisterResponse,
   RegisterMutation,
-  {rejectValue: ValidationError}
+  { rejectValue: ValidationError }
 >(
   'users/register',
-  async (registerMutation: RegisterMutation, {rejectWithValue}) => {
+  async (registerMutation: RegisterMutation, { rejectWithValue }) => {
     try {
-      const response = await axiosApi.post<RegisterResponse>('users/register', registerMutation);
-      console.log(response,data);
+      const formData = new FormData();
+      formData.append("username", registerMutation.username);
+      formData.append("password", registerMutation.password);
+      formData.append("displayName", registerMutation.displayName);
+
+      if (registerMutation.avatar) {
+        formData.append("avatar", registerMutation.avatar);
+      }
+
+      const response = await axiosApi.post<RegisterResponse>('users/register', formData);
+
       return response.data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
@@ -40,6 +48,7 @@ export const register = createAsyncThunk<
     }
   }
 );
+
 
 export const login = createAsyncThunk<
   User,

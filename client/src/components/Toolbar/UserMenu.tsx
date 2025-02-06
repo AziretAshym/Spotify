@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { User } from '../../types';
 import { useAppDispatch } from '../../app/hooks.ts';
 import { unsetUser } from '../../features/users/usersSlice.ts';
 import { logout } from '../../features/users/usersThunks.ts';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../../globalConstants.ts';
 
 interface Props {
   user: User;
@@ -29,13 +30,26 @@ const UserMenu: React.FC<Props> = ({user}) => {
     navigate('/login');
   }
 
+
+  const userAvatar = (() => {
+    if (typeof user.avatar === "string") {
+      return user.avatar.startsWith("images/") ? `${apiUrl}/${user.avatar}` : user.avatar;
+    }
+    return undefined;
+  })();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+
   return (
     <>
       <Typography variant="h3" component={NavLink} to="/" sx={{textDecoration: 'none', color: 'inherit'}}>
         Spotify
       </Typography>
       <Box display={"flex"} alignItems={"center"} gap={"10px"}>
-        <Avatar></Avatar>
+        <Avatar alt={user.displayName} src={userAvatar} />
         <Button
           onClick={handleClick}
           color="inherit"
