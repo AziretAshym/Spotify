@@ -24,12 +24,14 @@ const run = async () => {
             username: "test",
             password: "test",
             role: "admin",
+            displayName: "test",
             token: randomUUID()
         },
          {
             username: "test1",
             password: "test1",
             role: "user",
+            displayName: "test1",
             token: randomUUID()
         },
     )

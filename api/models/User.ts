@@ -42,7 +42,11 @@ const UserSchema = new Schema<HydratedDocument<UserFields>, UserModel, UserMetho
         type: String,
         required: true,
     },
-    displayName: String,
+    displayName: {
+        type: String,
+        required: true,
+    },
+    avatar: String,
     googleId: String,
 });
 

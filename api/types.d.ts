@@ -4,5 +4,6 @@ export interface UserFields {
     password: string;
     token: string;
     displayName: string;
+    avatar?: string;
     googleId: string;
 }
